@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ApplicationIcon>0782d400-442f-414d-80ce-bd0583eaa739.ico</ApplicationIcon>
+    
+    <!-- 경고 C# 코드 스타일 관련 경고(CA1416)는 무시합니다. -->
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    .NET SDK 스타일 프로젝트에서는 .cs와 .xaml 파일이 자동으로 포함됩니다.
+    아래 ItemGroup에 <Compile Include="..."/> 나 <Page Include="..."/> 항목이 수동으로 추가되어 있다면
+    그것이 오류의 원인이므로 모두 삭제해야 합니다.
+  -->
+
+  <ItemGroup>
+    <!-- 아이콘 파일을 콘텐츠로 포함합니다. -->
+    <Content Include="0782d400-442f-414d-80ce-bd0583eaa739.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Images 폴더의 모든 파일을 리소스로 포함합니다. -->
+    <Resource Include="Images\**" />
+  </ItemGroup>
+
+</Project>
