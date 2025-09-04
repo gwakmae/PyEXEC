@@ -34,6 +34,66 @@ namespace PyExec.Helpers
             _virtualEnvironmentManager = virtualEnvironmentManager;
         }
 
+        // ### [추가] 지정된 스크립트를 새 CMD 창에서 실행하는 메서드 ###
+        public void ExecuteInCmd(Program program)
+        {
+            if (program == null) return;
+
+            string scriptPath = program.Path;
+            if (string.IsNullOrEmpty(scriptPath) || !File.Exists(scriptPath))
+            {
+                MessageBox.Show($"스크립트 파일을 찾을 수 없습니다: {scriptPath}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            string? workingDir = Path.GetDirectoryName(scriptPath);
+            if (string.IsNullOrEmpty(workingDir) || !Directory.Exists(workingDir))
+            {
+                MessageBox.Show($"스크립트의 유효한 작업 디렉토리를 찾을 수 없습니다: {workingDir ?? "N/A"}", "작업 폴더 오류", MessageBoxButton.OK, MessageBoxImage.Warning);
+                workingDir = Environment.CurrentDirectory; // Fallback
+            }
+
+            string actualVenvPath = _virtualEnvironmentManager.GetEffectiveVirtualEnvPath(program);
+            string commandToRun = $"py \"{scriptPath}\"";
+            string commandChain;
+
+            if (!string.IsNullOrEmpty(actualVenvPath))
+            {
+                string activateScript = Path.Combine(actualVenvPath, "Scripts", "activate.bat");
+                if (File.Exists(activateScript))
+                {
+                    commandChain = $"call \"{activateScript}\" && {commandToRun}";
+                }
+                else
+                {
+                    MessageBox.Show($"가상 환경의 'activate.bat' 파일을 찾을 수 없습니다: {activateScript}. 가상환경 활성화 없이 실행합니다.", "경고", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    commandChain = commandToRun;
+                }
+            }
+            else
+            {
+                commandChain = commandToRun;
+            }
+
+            string finalCommand = $"cd /d \"{workingDir}\" && {commandChain}";
+
+            try
+            {
+                var psi = new ProcessStartInfo("cmd.exe", $"/k \"{finalCommand}\"")
+                {
+                    WorkingDirectory = workingDir,
+                    UseShellExecute = false,
+                    CreateNoWindow = false,
+                };
+                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"CMD 창을 여는 중 오류가 발생했습니다: {ex.Message}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
         // --- MODIFIED Method to Show Detailed Start Info ---
         public async Task ShowStartInfoAsync(Program program) // 비동기 메서드로 변경
         {

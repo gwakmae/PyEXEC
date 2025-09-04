@@ -18,6 +18,7 @@ namespace PyExec.Models
         private string _virtualEnvPath = "";
         private string _displayVirtualEnvPath = ""; // UI 표시용
         private bool _useUvRun; // 추가: uv run 사용 여부
+        private bool _runInCmd; // ### [추가] CMD에서 실행 여부
 
         public int Order
         {
@@ -92,8 +93,23 @@ namespace PyExec.Models
             {
                 if (SetField(ref _useUvRun, value))
                 {
+                    if (value) RunInCmd = false; // ### [추가] 상호 배제를 위해 RunInCmd를 false로 설정
                     OnPropertyChanged(nameof(RunnerDisplay)); // UI 업데이트를 위해 RunnerDisplay 속성 변경 알림
                     OnPropertyChanged(nameof(DisplayVirtualEnvPath)); // ### [추가] UseUvRun이 바뀌면 DisplayVirtualEnvPath도 갱신
+                }
+            }
+        }
+
+        // ### [추가] CMD 창에서 직접 실행할지 여부를 결정하는 속성 ###
+        public bool RunInCmd
+        {
+            get { return _runInCmd; }
+            set
+            {
+                if (SetField(ref _runInCmd, value))
+                {
+                    if (value) UseUvRun = false; // ### [추가] 상호 배제를 위해 UseUvRun을 false로 설정
+                    OnPropertyChanged(nameof(RunnerDisplay));
                 }
             }
         }
@@ -109,7 +125,13 @@ namespace PyExec.Models
                     return "exe";
                 }
 
-                // 2. .exe가 아니면 UseUvRun 설정에 따라 'uv run' 또는 'python'을 표시합니다.
+                // ### [추가] 2. RunInCmd가 true이면 'cmd'를 표시합니다. ###
+                if (RunInCmd)
+                {
+                    return "cmd";
+                }
+
+                // 3. .exe가 아니면 UseUvRun 설정에 따라 'uv run' 또는 'python'을 표시합니다.
                 return UseUvRun ? "uv run" : "python";
             }
         }

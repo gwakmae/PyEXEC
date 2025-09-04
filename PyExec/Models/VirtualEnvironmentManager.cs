@@ -266,10 +266,5 @@ namespace PyExec.Models
             } // End if DialogResult.OK
             return false; // Dialog cancelled
         }
-
-        // SaveVirtualEnvironmentSettings is implicitly done by SaveDefaultVirtualEnvRoot
-
-        // SaveProgramList should be called by the caller (MainWindow) after SetVirtualEnvForSelectedPrograms returns true.
-
     }
 }

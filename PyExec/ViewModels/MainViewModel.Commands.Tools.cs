@@ -46,12 +46,29 @@ namespace PyExec.ViewModels
             }
         }
 
-        private void ExecuteSetExecutionMethod(bool useUv)
+        // ### [수정] 실행 방식을 설정하는 통합 메서드 ###
+        private void ExecuteSetExecutionMethod(string mode)
         {
             var selectedProgram = ActivePanelVM.SelectedProgram;
-            if (selectedProgram != null && selectedProgram.UseUvRun != useUv)
+            if (selectedProgram == null) return;
+
+            bool changed = false;
+            switch (mode)
             {
-                selectedProgram.UseUvRun = useUv;
+                case "python":
+                    if (selectedProgram.RunInCmd) { selectedProgram.RunInCmd = false; changed = true; }
+                    if (selectedProgram.UseUvRun) { selectedProgram.UseUvRun = false; changed = true; }
+                    break;
+                case "uv":
+                    if (!selectedProgram.UseUvRun) { selectedProgram.UseUvRun = true; changed = true; }
+                    break;
+                case "cmd":
+                    if (!selectedProgram.RunInCmd) { selectedProgram.RunInCmd = true; changed = true; }
+                    break;
+            }
+
+            if (changed)
+            {
                 ActivePanelVM.SavePrograms();
             }
         }
@@ -145,7 +162,7 @@ namespace PyExec.ViewModels
         {
             var program = ActivePanelVM.SelectedProgram;
             if (program == null) return;
-            
+
             string fileName = Path.GetFileNameWithoutExtension(program.Path);
             if (program.Description != fileName)
             {

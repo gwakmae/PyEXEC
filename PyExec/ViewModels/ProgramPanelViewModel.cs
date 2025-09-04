@@ -1,4 +1,3 @@
-// PyExec/ViewModels/ProgramPanelViewModel.cs
 using PyExec.Models;
 using System;
 using System.Collections.ObjectModel;

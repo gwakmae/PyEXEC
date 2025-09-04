@@ -26,7 +26,7 @@ namespace PyExec.ViewModels
         {
             // 기존 값과 새 값이 동일하면 아무 작업도 하지 않습니다.
             if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-            
+
             // 값을 업데이트하고 변경되었음을 알립니다.
             field = value;
             OnPropertyChanged(propertyName);

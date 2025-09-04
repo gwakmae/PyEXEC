@@ -97,6 +97,7 @@
                 <Separator/>
                 <MenuItem Header="Set to run with 'uv run'" Command="{Binding SetRunUvCommand}"/>
                 <MenuItem Header="Set to run with 'python'" Command="{Binding SetRunPythonCommand}"/>
+                <MenuItem Header="Set to run in CMD window" Command="{Binding SetRunCmdCommand}"/>
                 <Separator/>
                 <MenuItem Header="Open CMD (Default Venv)" Command="{Binding OpenCmdDefaultVenvCommand}"/>
                 <MenuItem Header="Open CMD (Selected Program Venv)" Command="{Binding OpenCmdSelectedVenvCommand}"/>

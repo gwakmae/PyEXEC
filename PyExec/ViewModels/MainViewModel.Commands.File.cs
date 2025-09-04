@@ -1,4 +1,3 @@
-// PyExec/ViewModels/MainViewModel.Commands.File.cs
 using PyExec.Helpers;
 using System.IO; // ### [추가] Path 클래스 사용을 위해
 using System.Windows;

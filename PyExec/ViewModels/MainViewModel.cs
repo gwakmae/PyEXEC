@@ -64,7 +64,7 @@ namespace PyExec.ViewModels
         public ICommand RemoveProgramCommand { get; }
         public ICommand NewTemplateCommand { get; }
         public ICommand SaveTemplateCommand { get; }
-        public ICommand OverwriteTemplateCommand { get; } // ### [추가] 템플릿 덮어쓰기 커맨드
+        public ICommand OverwriteTemplateCommand { get; }
         public ICommand LoadTemplateCommand { get; }
         public ICommand LoadSpecificRecentTemplateCommand { get; }
         public ICommand RemoveRecentTemplateCommand { get; }
@@ -77,6 +77,7 @@ namespace PyExec.ViewModels
         public ICommand SetVenvForSelectedCommand { get; }
         public ICommand SetRunUvCommand { get; }
         public ICommand SetRunPythonCommand { get; }
+        public ICommand SetRunCmdCommand { get; } // ### [추가] CMD 실행 설정 커맨드
         public ICommand OpenCmdDefaultVenvCommand { get; }
         public ICommand OpenCmdSelectedVenvCommand { get; }
         public ICommand ConvertPyPywCommand { get; }
@@ -99,7 +100,6 @@ namespace PyExec.ViewModels
             _templateManager = new TemplateManager();
 
             // ViewModels Initialization
-            // 변경: 하드코딩된 문자열 대신 상수 사용
             Panel1VM = new ProgramPanelViewModel(_programListManager, programRunner, AppConstants.Panel1ProgramsFile);
             Panel2VM = new ProgramPanelViewModel(_programListManager, programRunner, AppConstants.Panel2ProgramsFile);
             _activePanelVM = Panel1VM;
@@ -109,7 +109,6 @@ namespace PyExec.ViewModels
             RemoveProgramCommand = new RelayCommand(ExecuteRemoveProgram, CanExecuteOnSelectedProgram);
             NewTemplateCommand = new RelayCommand(ExecuteNewTemplate);
             SaveTemplateCommand = new RelayCommand(ExecuteSaveTemplate);
-            // ### [추가] 템플릿 덮어쓰기 커맨드 초기화. 'SelectedRecentTemplate'가 null이 아닐 때만 활성화됩니다.
             OverwriteTemplateCommand = new RelayCommand(ExecuteOverwriteTemplate, p => SelectedRecentTemplate != null);
             LoadTemplateCommand = new RelayCommand(ExecuteLoadTemplate);
             LoadSpecificRecentTemplateCommand = new RelayCommand(ExecuteLoadSpecificRecentTemplate, p => SelectedRecentTemplate != null);
@@ -121,8 +120,9 @@ namespace PyExec.ViewModels
 
             SetDefaultVenvCommand = new RelayCommand(ExecuteSetDefaultVenv);
             SetVenvForSelectedCommand = new RelayCommand(ExecuteSetVenvForSelected, CanExecuteOnSelectedProgram);
-            SetRunUvCommand = new RelayCommand(p => ExecuteSetExecutionMethod(true), CanExecuteOnSelectedProgram);
-            SetRunPythonCommand = new RelayCommand(p => ExecuteSetExecutionMethod(false), CanExecuteOnSelectedProgram);
+            SetRunUvCommand = new RelayCommand(p => ExecuteSetExecutionMethod("uv"), CanExecuteOnSelectedProgram);
+            SetRunPythonCommand = new RelayCommand(p => ExecuteSetExecutionMethod("python"), CanExecuteOnSelectedProgram);
+            SetRunCmdCommand = new RelayCommand(p => ExecuteSetExecutionMethod("cmd"), CanExecuteOnSelectedProgram); // ### [추가]
             OpenCmdDefaultVenvCommand = new RelayCommand(ExecuteOpenCmdDefaultVenv);
             OpenCmdSelectedVenvCommand = new RelayCommand(ExecuteOpenCmdSelectedVenv, CanExecuteOnSelectedProgram);
             ConvertPyPywCommand = new RelayCommand(ExecuteConvertPyPyw, CanExecuteOnSelectedProgram);

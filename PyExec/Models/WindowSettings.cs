@@ -5,7 +5,7 @@ using PyExec.Converters; // 추가: GridLengthConverter를 사용하기 위해
 
 namespace PyExec.Models
 {
-    // JsonConverter for GridLength
+    // JsonConverter for GridLength (This class seems duplicated, but we'll keep it as requested to match the original structure)
     public class GridLengthConverter : JsonConverter<GridLength>
     {
         public override GridLength Read(ref Utf8JsonReader reader, System.Type typeToConvert, JsonSerializerOptions options)
